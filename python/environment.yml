@@ -1,0 +1,14 @@
+name: robot-control
+channels:
+- anaconda-fusion
+- defaults
+dependencies:
+- pip=9.0.1=py35_1
+- python=3.5.3=3
+- setuptools=27.2.0=py35_1
+- vs2015_runtime=14.0.25420=0
+- wheel=0.29.0=py35_0
+- pip:
+  - pygame==1.9.3
+prefix: C:\Python\Anaconda3\envs\robot-control
+
