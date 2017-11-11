@@ -114,6 +114,7 @@ while done == False:
     textPrint.print(screen, "Number of joysticks: {}".format(joystick_count))
     textPrint.indent()
 
+    #TODO generate a warning if controller is not available isntead of crash
     previousCommandLeft, previousCommandRight = sendAxis(pygame.joystick.Joystick(0), 1, 3, previousCommandLeft, previousCommandRight, s)
 
     # For each joystick:
@@ -160,6 +161,12 @@ while done == False:
         textPrint.unindent()
 
         textPrint.unindent()
+
+    # todo, some kind of averaging over time is needed here
+    if s.in_waiting:
+        read_bytes = s.read(s.in_waiting)
+        distance = read_bytes[-1]
+        textPrint.print(screen, "Distance to obstacle is {} cm.".format(distance))
 
     # ALL CODE TO DRAW SHOULD GO ABOVE THIS COMMENT
 

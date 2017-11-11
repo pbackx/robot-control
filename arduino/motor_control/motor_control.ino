@@ -12,19 +12,16 @@ int PIN_ENABLEB_LEFT = 5;
 int PIN_IN3_LEFT = 7;
 int PIN_IN4_LEFT = 6;
 
-// int PIN_LEFT_CONTROL = 11;
-// int PIN_RIGHT_CONTROL = 12;
-
 int STOP = 0;
 int FORWARD = 1;
 int BACKWARD = -1;
 
+int TRIGGER = 11; // gray wire
+int ECHO = 12; // white wire
+
 SoftwareSerial BT(2, 3); // RX | TX
 
 void setup() {
-//  pinMode(PIN_LEFT_CONTROL, INPUT);
-//  pinMode(PIN_RIGHT_CONTROL, INPUT);
-
   pinMode(PIN_ENABLEA_RIGHT, OUTPUT);
   pinMode(PIN_IN1_RIGHT, OUTPUT);
   pinMode(PIN_IN2_RIGHT, OUTPUT);
@@ -32,6 +29,9 @@ void setup() {
   pinMode(PIN_IN3_LEFT, OUTPUT);
   pinMode(PIN_IN4_LEFT, OUTPUT);
 
+  pinMode(TRIGGER, OUTPUT);
+  pinMode(ECHO, INPUT);
+  
   Serial.begin(9600);
   BT.begin(38400);
 }
@@ -62,14 +62,6 @@ void loop() {
     }
   }
 
-  // listen for user input and send it to the HC-05
-//  if (Serial.available())
-//    BT.write(Serial.read());
-
-  
-//  leftMotor = digitalRead(PIN_LEFT_CONTROL);
-//  rightMotor = digitalRead(PIN_RIGHT_CONTROL);
-
   if (leftMotor == FORWARD) {
     analogWrite(PIN_ENABLEB_LEFT, 100);
     digitalWrite(PIN_IN3_LEFT, LOW);
@@ -95,4 +87,15 @@ void loop() {
     digitalWrite(PIN_IN1_RIGHT, LOW);
     digitalWrite(PIN_IN2_RIGHT, LOW);
   }
+
+  int duration, distance;
+  digitalWrite(TRIGGER, HIGH);
+  delay(20);
+  digitalWrite(TRIGGER, LOW);
+  duration = pulseIn(ECHO, HIGH);
+  distance = (duration/2) / 29.1;
+  if (distance < 200 && distance > 0) {
+    BT.write(lowByte(distance)); // there should never be a high byte
+  }
+  delay(80);
 }
