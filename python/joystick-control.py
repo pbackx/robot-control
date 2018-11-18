@@ -57,7 +57,8 @@ import serial
 
 s = serial.Serial()
 s.baudrate=38400
-s.port='/dev/rfcomm0'
+#s.port='/dev/rfcomm0'
+s.port='COM4'
 s.open()
 
 # -------- Main Program Loop -----------

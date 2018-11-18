@@ -7,10 +7,10 @@ import serial
 
 s = serial.Serial()
 s.baudrate=38400
-s.port='/dev/rfcomm0'
+s.port='COM4'
 s.open()
 
 if s.is_open:
-    s.write(b'r')
+    s.write(b'l')
 else:
     print("Unable to connect to serial connection")

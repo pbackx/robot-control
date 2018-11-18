@@ -34,6 +34,8 @@ void setup() {
   
   Serial.begin(9600);
   BT.begin(38400);
+
+  Serial.write("Started\n");
 }
 
 void loop() {
@@ -62,6 +64,24 @@ void loop() {
     }
   }
 
+  int duration, distance;
+  digitalWrite(TRIGGER, HIGH);
+  delay(20);
+  digitalWrite(TRIGGER, LOW);
+  duration = pulseIn(ECHO, HIGH);
+  distance = (duration/2) / 29.1;
+  if (distance < 200 && distance > 0) {
+    int distByte = lowByte(distance);
+    if (distByte < 10) {
+      Serial.print("Very close!\n");
+      if (leftMotor == FORWARD || rightMotor == FORWARD) {
+        leftMotor = STOP;    
+        rightMotor = STOP;
+      }
+    }
+    BT.write(distByte); // there should never be a high byte
+  }
+
   if (leftMotor == FORWARD) {
     analogWrite(PIN_ENABLEB_LEFT, 100);
     digitalWrite(PIN_IN3_LEFT, LOW);
@@ -87,15 +107,6 @@ void loop() {
     digitalWrite(PIN_IN1_RIGHT, LOW);
     digitalWrite(PIN_IN2_RIGHT, LOW);
   }
-
-  int duration, distance;
-  digitalWrite(TRIGGER, HIGH);
-  delay(20);
-  digitalWrite(TRIGGER, LOW);
-  duration = pulseIn(ECHO, HIGH);
-  distance = (duration/2) / 29.1;
-  if (distance < 200 && distance > 0) {
-    BT.write(lowByte(distance)); // there should never be a high byte
-  }
+  
   delay(80);
 }
